@@ -3,6 +3,8 @@ import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
+import { WebsocketGateway } from './websocket/websocket.gateway';
+import { MessageModule } from './message/message.module';
 
 @Module({
   imports: [
@@ -10,8 +12,9 @@ import { UserModule } from './user/user.module';
     PrismaModule,
     AuthModule,
     UserModule,
+    MessageModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [WebsocketGateway],
 })
 export class AppModule {}

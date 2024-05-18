@@ -34,9 +34,9 @@ export class AuthService {
     const jwtPayload = { id: user.id, email };
     const accessToken = await this.signAccessToken(jwtPayload);
 
-    const { firstName, lastName } = user;
+    const { firstName, lastName, id } = user;
 
-    return { firstName, lastName, email, accessToken };
+    return { id, firstName, lastName, email, accessToken };
   }
 
   async signUp(signUpDto: SignUpDto) {
@@ -59,8 +59,6 @@ export class AuthService {
 
     return { msg: 'User successfully signed up' };
   }
-
-  logout() {}
 
   async signAccessToken(jwtPayload: { id: string; email: string }) {
     const jwtAccessTokenSecret = this.configService.get(

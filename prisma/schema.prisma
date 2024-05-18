@@ -20,7 +20,19 @@ model User {
   email     String @unique()
   password  String
 
-  createdAt DateTime @default(now())
+  createdAt DateTime  @default(now())
+  Message   Message[]
 
   @@map("users")
+}
+
+model Message {
+  id      String @id @default(uuid())
+  message String
+  userId  String
+  user    User   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@map("messages")
 }
