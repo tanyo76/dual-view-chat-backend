@@ -6,16 +6,25 @@ import { CreateMessageDto } from 'src/websocket/websocket.gateway';
 export class MessageService {
   constructor(private prismaService: PrismaService) {}
 
-  async getMessages() {
+  async getMessages(withResponse: boolean) {
     return await this.prismaService.message.findMany({
       include: {
         user: true,
+        response: withResponse,
       },
     });
   }
 
-  async createMessage(createMessageDto: CreateMessageDto) {
+  async createMessage(createMessageDto: CreateMessageDto, responseId) {
     const { message, id } = createMessageDto;
-    await this.prismaService.message.create({ data: { message, userId: id } });
+    return await this.prismaService.message.create({
+      data: { message, userId: id, responseId },
+    });
+  }
+
+  async createResponse(message: string) {
+    return await this.prismaService.openAiResponse.create({
+      data: { message },
+    });
   }
 }

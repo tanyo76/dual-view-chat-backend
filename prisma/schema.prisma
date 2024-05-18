@@ -29,10 +29,24 @@ model User {
 model Message {
   id      String @id @default(uuid())
   message String
-  userId  String
-  user    User   @relation(fields: [userId], references: [id])
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  responseId String
+  response   OpenAiResponse @relation(fields: [responseId], references: [id])
 
   createdAt DateTime @default(now())
 
   @@map("messages")
+}
+
+model OpenAiResponse {
+  id      String @id @default(uuid())
+  message String
+
+  createdAt DateTime  @default(now())
+  Message   Message[]
+
+  @@map("responses")
 }

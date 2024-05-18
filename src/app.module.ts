@@ -5,6 +5,7 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { WebsocketGateway } from './websocket/websocket.gateway';
 import { MessageModule } from './message/message.module';
+import { OpenaiModule } from './openai/openai.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { MessageModule } from './message/message.module';
     AuthModule,
     UserModule,
     MessageModule,
+    OpenaiModule,
   ],
   controllers: [],
   providers: [WebsocketGateway],
