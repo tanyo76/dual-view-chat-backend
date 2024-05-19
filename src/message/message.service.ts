@@ -23,16 +23,17 @@ export class MessageService {
     });
   }
 
-  async createMessage(createMessageDto: CreateMessageDto, responseId) {
-    const { message, id } = createMessageDto;
-    return await this.prismaService.message.create({
-      data: { message, userId: id, responseId },
-    });
-  }
+  async createMessage(createMessageDto: CreateMessageDto) {
+    const { message, id, assistantMessage } = createMessageDto;
 
-  async createResponse(message: string) {
-    return await this.prismaService.openAiResponse.create({
-      data: { message },
+    this.prismaService.$transaction(async () => {
+      const aiResponse = await this.prismaService.openAiResponse.create({
+        data: { message: assistantMessage },
+      });
+
+      await this.prismaService.message.create({
+        data: { message, userId: id, responseId: aiResponse.id },
+      });
     });
   }
 }

@@ -14,8 +14,10 @@ export interface CreateMessageDto {
   id: string;
   email: string;
   message: string;
+  assistantMessage: string;
 }
 
+// :TODO Add auth middleware to the socket server
 @WebSocketGateway({ cors: true })
 export class WebsocketGateway
   implements OnGatewayConnection, OnGatewayDisconnect
@@ -49,11 +51,10 @@ export class WebsocketGateway
 
     const response = await this.openAiService.sendText(message);
     const assistantMessage = response.choices[0].message.content;
+    messageDto = { ...messageDto, assistantMessage };
 
-    const aiResponse =
-      await this.messageService.createResponse(assistantMessage);
-    await this.messageService.createMessage(messageDto, aiResponse.id);
+    await this.messageService.createMessage(messageDto);
 
-    this.io.sockets.emit('openAiMessage', `Assistant: ${aiResponse.message}`);
+    this.io.sockets.emit('openAiMessage', `Assistant: ${assistantMessage}`);
   }
 }
