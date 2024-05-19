@@ -8,7 +8,11 @@ services:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: Test@123
       POSTGRES_DB: chat-app
+    volumes:
+      - pgdata:/var/lib/postgresql/data
     networks:
       - chat-app
 networks:
   chat-app:
+volumes:
+  pgdata:

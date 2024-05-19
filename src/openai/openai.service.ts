@@ -11,7 +11,7 @@ export class OpenaiService extends OpenAI {
   async sendText(content: string) {
     return await this.chat.completions.create({
       messages: [{ role: 'user', content }],
-      model: 'gpt-3.5-turbo',
+      model: 'gpt-4-turbo',
     });
   }
 }

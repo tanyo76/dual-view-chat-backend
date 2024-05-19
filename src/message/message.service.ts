@@ -9,7 +9,15 @@ export class MessageService {
   async getMessages(withResponse: boolean) {
     return await this.prismaService.message.findMany({
       include: {
-        user: true,
+        user: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+            createdAt: true,
+          },
+        },
         response: withResponse,
       },
     });
