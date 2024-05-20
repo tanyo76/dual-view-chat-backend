@@ -1,6 +1,5 @@
 import {
   OnGatewayConnection,
-  OnGatewayDisconnect,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
@@ -9,34 +8,37 @@ import {
 import { Server } from 'socket.io';
 import { MessageService } from 'src/message/message.service';
 import { OpenaiService } from 'src/openai/openai.service';
+import { Socket } from 'socket.io';
+import { verify } from 'jsonwebtoken';
+import { ConfigService } from '@nestjs/config';
+import { sendAssistantResponse, sendMessage } from 'src/utils/message.utils';
+import { CreateMessageDto } from 'src/types/messages.types';
+import { UnauthorizedException } from '@nestjs/common';
 
-export interface CreateMessageDto {
-  id: string;
-  email: string;
-  message: string;
-  assistantMessage: string;
-}
-
-// :TODO Add auth middleware to the socket server
 @WebSocketGateway({ cors: true })
-export class WebsocketGateway
-  implements OnGatewayConnection, OnGatewayDisconnect
-{
+export class WebsocketGateway implements OnGatewayConnection {
   constructor(
     private messageService: MessageService,
     private openAiService: OpenaiService,
+    private configService: ConfigService,
   ) {}
 
   @WebSocketServer() io: Server;
 
-  handleConnection(socket: any, ...args: any[]) {
-    console.log(socket.id, 'connected');
-    // this.io.sockets.emit('message', 'Connected');
-  }
+  handleConnection(socket: Socket) {
+    try {
+      const authHeader = socket.handshake.headers.authorization;
 
-  handleDisconnect(socket: any) {
-    console.log(socket.id, 'disconnected');
-    // this.io.sockets.emit('message', 'Left');
+      if (!authHeader) {
+        throw new UnauthorizedException();
+      }
+
+      const token = authHeader.split(' ')[1];
+
+      verify(token, this.configService.get('JWT_ACCESS_TOKEN_SECRET'));
+    } catch (error) {
+      socket.disconnect();
+    }
   }
 
   @SubscribeMessage('message')
@@ -47,7 +49,7 @@ export class WebsocketGateway
     const { email, message } = messageDto;
 
     const messageString = `${email}: ${message}`;
-    this.io.sockets.emit('message', messageString);
+    this.io.sockets.emit('message', sendMessage(messageString));
 
     const response = await this.openAiService.sendText(message);
     const assistantMessage = response.choices[0].message.content;
@@ -55,6 +57,9 @@ export class WebsocketGateway
 
     await this.messageService.createMessage(messageDto);
 
-    this.io.sockets.emit('openAiMessage', `Assistant: ${assistantMessage}`);
+    this.io.sockets.emit(
+      'openAiMessage',
+      sendAssistantResponse(assistantMessage),
+    );
   }
 }
