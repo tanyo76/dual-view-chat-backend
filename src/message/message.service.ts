@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateMessageDto } from 'src/websocket/websocket.gateway';
+import { CreateMessageDto } from 'src/types/messages.types';
 
 @Injectable()
 export class MessageService {

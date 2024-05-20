@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import { SignInDto, SignUpDto } from './validation-schemas/auth.schemas';
-import { comparePasswordHash, hashPassword } from '../utils/bcrypt';
+import { comparePasswordHash, hashPassword } from '../utils/bcrypt.utils';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 
