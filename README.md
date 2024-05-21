@@ -26,6 +26,16 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
+## Install Docker Desktop ([Docker Desktop](https://www.docker.com/products/docker-desktop/))
+
+Install Docker Desktop in order to spin up postgresql container.
+The application uses docker compose in order to start a postgresql container.
+
+## .env file
+
+The application uses the environment variables from an .env file.
+Create the .env file and populate all the needed environment variables from the .env.example file.
+
 ## Installation
 
 ```bash
