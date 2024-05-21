@@ -43,7 +43,7 @@ model Message {
 
 model OpenAiResponse {
   id      String @id @default(uuid())
-  message String
+  message String @db.Text
 
   createdAt DateTime  @default(now())
   Message   Message[]

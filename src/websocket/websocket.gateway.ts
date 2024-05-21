@@ -43,23 +43,28 @@ export class WebsocketGateway implements OnGatewayConnection {
 
   @SubscribeMessage('message')
   async handleMessage(
-    client: any,
+    socket: Socket,
     messageDto: CreateMessageDto,
   ): Promise<void> {
-    const { email, message } = messageDto;
+    try {
+      const { email, message } = messageDto;
 
-    const messageString = `${email}: ${message}`;
-    this.io.sockets.emit('message', sendMessage(messageString));
+      const messageString = `${email}: ${message}`;
+      this.io.sockets.emit('message', sendMessage(messageString));
+      this.io.sockets.emit('responding');
 
-    const response = await this.openAiService.sendText(message);
-    const assistantMessage = response.choices[0].message.content;
-    messageDto = { ...messageDto, assistantMessage };
+      const response = await this.openAiService.sendText(message);
+      const assistantMessage = response.choices[0].message.content;
+      messageDto = { ...messageDto, assistantMessage };
 
-    await this.messageService.createMessage(messageDto);
+      await this.messageService.createMessage(messageDto);
 
-    this.io.sockets.emit(
-      'openAiMessage',
-      sendAssistantResponse(assistantMessage),
-    );
+      this.io.sockets.emit(
+        'openAiMessage',
+        sendAssistantResponse(assistantMessage),
+      );
+    } catch (err) {
+      socket.emit('error', err);
+    }
   }
 }

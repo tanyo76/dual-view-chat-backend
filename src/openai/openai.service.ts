@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
 
@@ -9,9 +9,13 @@ export class OpenaiService extends OpenAI {
   }
 
   async sendText(content: string) {
-    return await this.chat.completions.create({
-      messages: [{ role: 'user', content }],
-      model: 'gpt-4-turbo',
-    });
+    try {
+      return await this.chat.completions.create({
+        messages: [{ role: 'user', content }],
+        model: 'gpt-4-turbo',
+      });
+    } catch (error) {
+      throw new HttpException('Message cannot be sent right now', 500);
+    }
   }
 }
