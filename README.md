@@ -36,6 +36,12 @@ The application uses docker compose in order to start a postgresql container.
 The application uses the environment variables from an .env file.
 Create the .env file and populate all the needed environment variables from the .env.example file.
 
+## nvm
+
+In the .nvmrc file is specified the node.js version.
+If you are using nvm you can run `nvm install` and `nvm use` in the project directory in order to install and use the specified node.js version.
+
+
 ## Installation
 
 ```bash
