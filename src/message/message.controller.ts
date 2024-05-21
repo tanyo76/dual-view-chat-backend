@@ -1,7 +1,6 @@
 import {
   Controller,
   Get,
-  HttpException,
   InternalServerErrorException,
   Query,
   UseGuards,
@@ -17,7 +16,6 @@ export class MessageController {
   @UseGuards(JwtAuthGuard)
   async getMessages(@Query('withResponse') withResponse: string) {
     try {
-      throw new HttpException('Cannot', 500);
       let responseCriteria = false;
 
       if (withResponse && withResponse === 'true') {
