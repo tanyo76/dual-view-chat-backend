@@ -32,7 +32,7 @@
     "@nestjs/platform-express": "^10.4.2",
     "@nestjs/platform-socket.io": "^10.3.8",
     "@nestjs/websockets": "^10.3.8",
-    "@prisma/client": "^5.14.0",
+    "@prisma/client": "^5.20.0",
     "bcrypt": "^5.1.1",
     "openai": "^4.47.1",
     "passport-jwt": "^4.0.1",
