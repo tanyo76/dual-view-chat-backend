@@ -33,7 +33,7 @@
     "@nestjs/platform-socket.io": "^10.3.8",
     "@nestjs/websockets": "^10.3.8",
     "@prisma/client": "^5.14.0",
-    "bcrypt": "^5.1.1",
+    "bcrypt": "^6.0.0",
     "openai": "^4.47.1",
     "passport-jwt": "^4.0.1",
     "prisma": "^5.14.0",
